@@ -1,4 +1,4 @@
-1. **Understand the business.** Describe the business processes in the scenario: what happens, who is involved, and what data each step produces.
+**Understand the business.** Describe the business processes in the scenario: what happens, who is involved, and what data each step produces.
 
 Process - Who/Where - Data Produced
 
