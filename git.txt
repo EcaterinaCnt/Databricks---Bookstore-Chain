@@ -1,0 +1,7 @@
+1. git status
+? maybe git activate
+2. git add .
+3. git commit -m "message"
+--if it is still not pushing
+4. git pull -rebase origin main
+5. git push origin main

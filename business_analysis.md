@@ -42,7 +42,7 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 ---- REFUND IN THE ORIGINAL SHOP
 
 -returning promo 3 for 2 items, is the refund its full price/or the discounted amount based on the returned book
----- TO BE DISCUSSED 
+--- WE DO NOT RETURN 3 FOR 2 PURCHASES
 
 -can only some items be returned
 ---- YES
@@ -56,7 +56,17 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 *Discount:*
 
 -which paperbacks are eligible
----- TO BE DISCUSSED 
+
+Defining eligibility through a promotion configuration rather than hardcoding a product list 
+e.g. only products with category = 'Book' and format = 'Paperback' can qualify.
+
+i.      The product must belong to the selected promotion.
+ii.     The promotion must be active at the transaction timestamp.
+iii.    Three eligible units form one promotional group.
+iv.     For six eligible units, two groups qualify and two books are free.
+v.      A product can have quantity greater than one, so eligibility is based on units rather than distinct ISBNs.
+vi.     The promotion does not stack with other product discounts in the first version.
+
 
 -what happens with 4/5/6 such books in the 3 for 2 rule
 ---- THE DISCOUNT GOES ON THE SAME LOGIC, NET -THE CHEAPEST, IF WE HAVE 6 THEN 1+1 ARE FREE
@@ -65,14 +75,14 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 ---- YES, IT IS SOLD
 
 -how many products are in the basket 3 for 2 (1/2/3)
----- 3 PRODS DISAPPEAR FROM STOCK, THEN 3 PRODS ARE IN THE BASKET
+---- 3 PRODS DISAPPEAR FROM STOCK, 3 PRODS ARE IN THE BASKET
 
 *Online Orders:*
 --we take into cosideration that an online order can be paid only online and not to the courier--
 ---- ACCEPTED
 
 -statuses: Placed --> Paid --> **one more status** --> Shipped --> Delivered 
----- WHICH STATUS?
+---- ANOTHER INTERMEDIATE STATUS: Ready for Delivery
 
 -which date counts as revenue: Order Date/Payment Date/Shipping Date/Delivery Date
 ---- CONTABILITY RULES THAT THE PAYMENT DATE IS THE REVENUE DATE
@@ -93,7 +103,7 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 ---- DOES NOT MATTER INTERN DETAILS, JUST THE STORE WHERE THE ORDER HAS BEEN MADE 
 
 -can we have the same customer_id with multiple email addresses, do we need such info about the customer or is it mask by customer_id
----- THE CLIENT IS UNIC
+---- THE CLIENT IS UNIQUE
 
 
 *Payment:*
@@ -102,7 +112,7 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 ---- NO
 
 -are there split plays card & cash
----- IT MAY POSSIBLE?
+---- IT MAY POSSIBLE
 
 -is the VAT included
 ---- IT IS ALREADY INCLUDED 
@@ -125,7 +135,10 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 
 -a file arrives two days late, is the event date the sale date (so we restate past days), or the arrival date?
 -the dashboard must show that earlier numbers were incomplete
----- DOES NOT MATTER 
+
+----- report by event date (receipt timestamp), keep the arrival timestamp in bronze, and accept that past days get restated
+-- WHY do we need it?
+
 
 -a store closed for renovation sends no file, and so does a store with a connection problem --> how do we tell them apart? We need an expected-files calendar from store open and close dates
 ---- DOES NOT MATTER 
@@ -170,9 +183,11 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 
 **KPIs**
 
+-Diagrama cu procesul si evenimentele
+
 *Net Sales:*
 -sum of line amounts after discounts, minuS refunds - we exclude cancelled receipts and cancelled online orders
--what about VAT
+-what about VAT - VAT included 
 (day-store/channel-products)
 
 *Units Sold:*
@@ -223,3 +238,48 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 -POS data as daily JSON files per store
 -online exports as CSV with upserts, and catalogue, stores and promotions as snapshots
 -only online customers have personal data (name, email, phone, address) which are masked 
+
+
+**Refinment**
+
+-- POS and receipts
+
+Receipt numbers usually restart daily per till, so the key is (store, till, receipt number, RECEIPT date), not receipt number alone. --> MAYBE TIMESTAMP INSTEAD OF DATE
+Carrier bags and gift wrap are IN CATALOG
+
+non-catalogue items that distort items per basket --> WE DO NOT WRITE THESE DOWN ON RECEIPT?
+
+Cancelling a refund receipt is possible, so refunds also need the COMPLETED check 
+--TAKE INTO CONSID
+
+--Returns
+
+Return quantity cannot exceed purchased minus already returned -- RETURN DONE MEANS VERIFICATION DONE
+A return must not point to a cancelled receipt
+Returns can come in without a matching original, for example because the original file is late 
+--TO BE DISCUSSED - SHOULD NOT TAKE INTO CONSID
+
+?? Add a return window and a return reason such as "duplicate gift" -- CAN HAVE / CANNOT, depends on convinence 
+
+--Online
+
+An order can arrive in the export twice with the same status
+--CAN
+
+--Master data
+
+A new store’s first file may arrive before it appears in the stores snapshot, and a new title can be sold before it is in the catalogue
+
+TO REVIEW AND RESEARCH:
+
+**DIMENSIONAL MODELLING - UNKNOWN MEMBER**
+
+*Gross / Net Sales* calculation taking into consid the returns/cancellations
+
+*Order to shipment time*
+
+*Status assignment to order - online*
+
+*Reporting date*
+
+
