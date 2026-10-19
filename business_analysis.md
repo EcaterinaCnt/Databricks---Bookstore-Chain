@@ -2,7 +2,7 @@
 
 Process - Who/Where - Data Produced
 
-In store sales - Customer/Cashier - POS eceipt header (store, till, cashier, timestamp, payment type, total)
+In store sales - Customer/Cashier - POS receipt header (store, till, cashier, timestamp, payment type, total)
                                   - POS receipt lines (product, qty, price, discount)
 
 “3 for 2” promotion - Store, head office - discount on the cheapest of three eligible paperbacks, so the line price is 0 or a discount amount is recorded
@@ -26,23 +26,26 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 
 **-coloana status: cancel sau nu**
 -is it like a flag for the original transaction, or a separate cancel event that references it?
+--no flag, it is a status
+
 -can the cancel arrive in a later file than the original? (the new correct receipt will have a new Receipt_ID therefore how will we know these are connected)
 --poate sa vina mai tarziu
+
 -the receipt is cancelled - it does not generate revenue - it can be followed by a new correct receipt - it is not necessarily a return
 
 *Return:*
 
 -the purchase must be valid - the revenue must be returned (-) - it refers an existing valid transaction - it can take place in another shop than the one where it has been bought the product 
---poate si in alt magazin
+---- IT CAN BE IN ANOTHER SHOP ALSO
 
 -which store gets the refund, if a book has been purchased in city A store Aa and returned in city B store Bb
---refund pe original shop
+---- REFUND IN THE ORIGINAL SHOP
 
 -returning promo 3 for 2 items, is the refund its full price/or the discounted amount based on the returned book
 ---- TO BE DISCUSSED 
 
 -can only some items be returned
----- DA
+---- YES
 
 -if the price after purchase drops, will the refund value the receipt or the new current price
 ---- ii dai cat a platit 
@@ -53,119 +56,122 @@ Master data - Head office - catalogue (new titles, delisted titles, formats), st
 *Discount:*
 
 -which paperbacks are eligible
--- TO BE DISCUSSED 
+---- TO BE DISCUSSED 
 
 -what happens with 4/5/6 such books in the 3 for 2 rule
--- 
+---- THE DISCOUNT GOES ON THE SAME LOGIC, NET -THE CHEAPEST, IF WE HAVE 6 THEN 1+1 ARE FREE
 
 -does the free book count as unit_sold
--- este sold 
+---- YES, IT IS SOLD
 
 -how many products are in the basket 3 for 2 (1/2/3)
--- 3 dispar 
+---- 3 PRODS DISAPPEAR FROM STOCK, THEN 3 PRODS ARE IN THE BASKET
 
 *Online Orders:*
 --we take into cosideration that an online order can be paid only online and not to the courier--
+---- ACCEPTED
 
 -statuses: Placed --> Paid --> **one more status** --> Shipped --> Delivered 
+---- WHICH STATUS?
 
 -which date counts as revenue: Order Date/Payment Date/Shipping Date/Delivery Date
---dpdv contabil Payment Date
+---- CONTABILITY RULES THAT THE PAYMENT DATE IS THE REVENUE DATE
 
 -can statuses be Out of order or Be repeated
---TOO COMPLICATED 
+---- TOO COMPLICATED - WE CAN REMOVE THIS LOGIC
 
 -can an order be cancelled after status Shipped and does it count as a Return
---ramane conditia ca nu mai poate fi cancelled after shipped, only returned 
+---- AFTER BEING SHIPPED, THE ORDER CANNOT BE CANCELLED, ONLY RETURNED
 
 -are there shipping fees, are these part of the net sales
--- TAKE into consid si shipping fee
+---- TAKE INTO CONSIDERATION THE SHIPPING FEE ALSO
 
 -cancelled before vs after payment - is the payment refunded automatically, is an unpaid order a paid order for the cancellation rate
--- --ramane conditia ca nu mai poate fi cancelled after shipped, only returned 
+---- SAME AS ABOVE, AFTER BEING SHIPPED, THE ORDER CANNOT BE CANCELLED, ONLY RETURNED
 
 -where there is no store in town, the region should come from the delivery address, is there a city to region mappping to cover every town
--- nu ne intereseaza intern, doar unde s a facut comanda 
+---- DOES NOT MATTER INTERN DETAILS, JUST THE STORE WHERE THE ORDER HAS BEEN MADE 
 
 -can we have the same customer_id with multiple email addresses, do we need such info about the customer or is it mask by customer_id
--- client unic
+---- THE CLIENT IS UNIC
 
 
 *Payment:*
 
 -are there vouchers
---nu avem
+---- NO
 
 -are there split plays card & cash
--- poate ambele 
+---- IT MAY POSSIBLE?
 
 -is the VAT included
--- este inclus
+---- IT IS ALREADY INCLUDED 
 
 -at the time of sale it must be used a valid price, so the catalogue price should have validity dates --> what if the late file contains a sale form before a price change tahat a catalogue has already processed
--- odata actualizat catalogul, pretul se ia in considerare din catalog 
+---- ONCE UPDATED THE CATALOGUE, THE PRICE TAKEN INTO CONSID IS IN IT
 
 *Store:*
 
 -can a cashier work in multiple stores
--- only one store 
+---- ONLY ONE STORE 
 
--which are the business days -- working days
+-which are the business days 
+---- WORKING DAYS 
 
 -region mapping
---fiecare store are o regiune
+---- EACH STORE HAS IT'S REGION 
 
 *File delivery:*
 
 -a file arrives two days late, is the event date the sale date (so we restate past days), or the arrival date?
 -the dashboard must show that earlier numbers were incomplete
---does not matter
+---- DOES NOT MATTER 
 
 -a store closed for renovation sends no file, and so does a store with a connection problem --> how do we tell them apart? We need an expected-files calendar from store open and close dates
---nu ne intereseaza 
+---- DOES NOT MATTER 
 
 -can the same file be sent twice, or replaced by a corrected version, is the file name or a content hash the unique key
---no
+---- NO
 
 -is an empty file valid for a no sales day and what if a file is cut off mid-way
---nu se trimite 
+---- NO EMPTY FILES ARE SENT
 
 -can the POS file format change over time
---no
+---- NO 
 
 *Master data:*
 
 -is there a work/title ID linking hardcover and paperback,bc Without it we can’t roll formats up to titles
---does not matter
+---- DOES NOT MATTER 
 
 -do non-book items (stationery, games) have ISBNs or only internal codes
---doar ISBN 
+---- JUST ISBN
 
 -can a delisted title still be sold from remaining stock or be returned
---returned yes, sold no
+---- RETURNED YES, SOLD NO
 
 -can a sale reference a product missing from the catalogue
---no
+---- NO
 
 -can a product code be reused for a different product, or can the same book have several editions
---no
+---- NO
 
 -if a regional manager changes, are past sales reported under the manager at that time or the current one
---no
+---- NO
 
 -is there a specific history to be held in order to produce stores comparisons
---no
+---- NO
 
 -should we take into cosideration promotions as well for specific products or start/end dates 
---yes (cateva doar)
+---- YES, WILL SET JUST A FEW EASY ONES 
 
 -what is the baseline, the previous week, the same week last year, or a comparable store without the promotion
-
+---- THE COMMON ONES 
 
 **KPIs**
 
 *Net Sales:*
--sum of line amounts after discounts, minut refunds - we exclude cancelled receipts and cancelled online orders
+-sum of line amounts after discounts, minuS refunds - we exclude cancelled receipts and cancelled online orders
 -what about VAT
 (day-store/channel-products)
 
