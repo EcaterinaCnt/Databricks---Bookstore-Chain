@@ -1,0 +1,4 @@
+store_id,store_name,city,region_id,manager_id,open_date,status,till_count
+ST001,Central Cluj,Cluj-Napoca,NW,M001,2023-04-01,OPEN,2
+ST002,Sibiu Books,Sibiu,CTR,M002,2022-06-15,OPEN,2
+ST003,Timisoara Plaza,Timisoara,W,M003,2021-08-10,OPEN,1

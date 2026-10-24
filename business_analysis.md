@@ -270,11 +270,16 @@ An order can arrive in the export twice with the same status
 
 A new store’s first file may arrive before it appears in the stores snapshot, and a new title can be sold before it is in the catalogue
 
-TO REVIEW AND RESEARCH:
+
+
+
+
+
+**TO REVIEW AND RESEARCH:**
 
 **DIMENSIONAL MODELLING - UNKNOWN MEMBER**
 
-*Gross / Net Sales* calculation taking into consid the returns/cancellations
+KPIs: *Gross / Net Sales* calculation taking into consid the returns/cancellations
 
 *Order to shipment time*
 

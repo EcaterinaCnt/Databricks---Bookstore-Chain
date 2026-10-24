@@ -1,0 +1,146 @@
+{
+  "store_id": "ST001",
+  "till_id": "T01",
+  "business_date": "2026-10-05",
+  "receipts": [
+    {
+      "receipt_id": "REC001",
+      "cashier_id": "CASH001",
+      "receipt_timestamp": "2026-10-05T10:00:00",
+      "status": "COMPLETED",
+      "corrected_from_receipt_id": "",
+      "receipt_total": 90,
+      "lines": [
+        {
+          "receipt_line_id": "RL-001",
+          "product_code": "9780000001016",
+          "quantity": 1,
+          "unit_price": 40,
+          "discount_amount": 0,
+          "promotion_code": ""
+        },
+        {
+          "receipt_line_id": "RL-002",
+          "product_code": "9780000001023",
+          "quantity": 1,
+          "unit_price": 35,
+          "discount_amount": 0,
+          "promotion_code": ""
+        },
+        {
+          "receipt_line_id": "RL-003",
+          "product_code": "5940000001056",
+          "quantity": 1,
+          "unit_price": 15,
+          "discount_amount": 0,
+          "promotion_code": ""
+        }
+      ],
+      "payments": [
+        {
+          "pos_payment_id": "PAY-001",
+          "payment_method": "CARD",
+          "amount": 90,
+          "payment_status": "SUCCEEDED",
+          "currency": "RON"
+        }
+      ]
+    },
+    {
+      "receipt_id": "REC002",
+      "cashier_id": "CASH001",
+      "receipt_timestamp": "2026-10-05T10:20:00",
+      "status": "COMPLETED",
+      "corrected_from_receipt_id": "",
+      "receipt_total": 75,
+      "lines": [
+        {
+          "receipt_line_id": "RL-004",
+          "product_code": "9780000001016",
+          "quantity": 1,
+          "unit_price": 40,
+          "discount_amount": 0,
+          "promotion_code": "3FOR2"
+        },
+        {
+          "receipt_line_id": "RL-005",
+          "product_code": "9780000001023",
+          "quantity": 1,
+          "unit_price": 35,
+          "discount_amount": 0,
+          "promotion_code": "3FOR2"
+        },
+        {
+          "receipt_line_id": "RL-006",
+          "product_code": "9780000001030",
+          "quantity": 1,
+          "unit_price": 30,
+          "discount_amount": 30,
+          "promotion_code": "3FOR2"
+        }
+      ],
+      "payments": [
+        {
+          "pos_payment_id": "PAY-002",
+          "payment_method": "CARD",
+          "amount": 50,
+          "payment_status": "SUCCEEDED",
+          "currency": "RON"
+        },
+        {
+          "pos_payment_id": "PAY-003",
+          "payment_method": "CASH",
+          "amount": 25,
+          "payment_status": "SUCCEEDED",
+          "currency": "RON"
+        }
+      ]
+    },
+    {
+      "receipt_id": "REC003",
+      "cashier_id": "CASH001",
+      "receipt_timestamp": "2026-10-05T11:00:00",
+      "status": "CANCELLED",
+      "corrected_from_receipt_id": "",
+      "receipt_total": 200,
+      "lines": [
+        {
+          "receipt_line_id": "RL-007",
+          "product_code": "9780000001047",
+          "quantity": 2,
+          "unit_price": 100,
+          "discount_amount": 0,
+          "promotion_code": ""
+        }
+      ],
+      "payments": []
+    },
+    {
+      "receipt_id": "REC004",
+      "cashier_id": "CASH001",
+      "receipt_timestamp": "2026-10-05T11:05:00",
+      "status": "COMPLETED",
+      "corrected_from_receipt_id": "REC003",
+      "receipt_total": 100,
+      "lines": [
+        {
+          "receipt_line_id": "RL-008",
+          "product_code": "9780000001047",
+          "quantity": 1,
+          "unit_price": 100,
+          "discount_amount": 0,
+          "promotion_code": ""
+        }
+      ],
+      "payments": [
+        {
+          "pos_payment_id": "PAY-004",
+          "payment_method": "CARD",
+          "amount": 100,
+          "payment_status": "SUCCEEDED",
+          "currency": "RON"
+        }
+      ]
+    }
+  ]
+}

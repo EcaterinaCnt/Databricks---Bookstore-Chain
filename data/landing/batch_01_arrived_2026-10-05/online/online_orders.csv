@@ -1,0 +1,4 @@
+order_id,customer_id,placed_at,delivery_city,shipping_fee,order_total
+O5001,,2026-10-05T11:00:00,Cluj-Napoca,10,85
+O5002,,2026-10-05T12:00:00,Bistrita,10,55
+O5003,,2026-10-05T13:00:00,Suceava,10,110

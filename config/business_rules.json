@@ -1,0 +1,17 @@
+{
+  "currency": "RON",
+  "online_revenue_trigger": "CHARGE_SUCCEEDED",
+  "cancellation_last_allowed_status": "READY_FOR_DELIVERY",
+  "online_returns_only_after": "DELIVERED",
+  "one_central_warehouse": "WH001",
+  "three_for_two": {
+    "promotion_code": "3FOR2",
+    "product_type": "BOOK",
+    "format": "PAPERBACK",
+    "min_unit_price": 25,
+    "max_unit_price": 60,
+    "cheapest_eligible_unit_discounted": true,
+    "active_from": "2026-10-01",
+    "active_to": "2026-10-31"
+  }
+}

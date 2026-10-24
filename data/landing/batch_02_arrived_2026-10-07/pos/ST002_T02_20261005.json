@@ -1,0 +1,34 @@
+{
+  "store_id": "ST002",
+  "till_id": "T02",
+  "business_date": "2026-10-05",
+  "receipts": [
+    {
+      "receipt_id": "REC006",
+      "cashier_id": "CASH001",
+      "receipt_timestamp": "2026-10-05T13:00:00",
+      "status": "COMPLETED",
+      "corrected_from_receipt_id": "",
+      "receipt_total": 70,
+      "lines": [
+        {
+          "receipt_line_id": "RL-010",
+          "product_code": "5940000001063",
+          "quantity": 1,
+          "unit_price": 70,
+          "discount_amount": 0,
+          "promotion_code": ""
+        }
+      ],
+      "payments": [
+        {
+          "pos_payment_id": "PAY-006",
+          "payment_method": "CARD",
+          "amount": 70,
+          "payment_status": "SUCCEEDED",
+          "currency": "RON"
+        }
+      ]
+    }
+  ]
+}
