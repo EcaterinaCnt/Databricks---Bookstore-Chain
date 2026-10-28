@@ -1,4 +1,5 @@
-"""Bookstore Scenario 1: deterministic synthetic SOURCE file generator.
+"""
+Bookstore Scenario 1: deterministic synthetic SOURCE file generator.
 Only Python standard library; run: python generator/generate_data.py
 These files simulate operational exports, NOT normalized Silver tables.
 """
@@ -10,36 +11,36 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'data' / 'landing'
 
-
 def put_csv(batch: str, group: str, name: str, rows: list[dict]):
     path = OUT / batch / group / name
     path.parent.mkdir(parents=True, exist_ok=True)
     if not rows:
-        raise ValueError(f'Cannot create an empty CSV: {name}')
-    with path.open('w', newline='', encoding='utf-8') as f:
+        raise ValueError(f'Cannot create an empty CSV: {name}') # Ensure we don't create empty CSV files
+    with path.open('w', newline='', encoding='utf-8') as f: 
         writer = csv.DictWriter(f, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
-    return path
+    return path # Return the path to the created CSV file
 
 
-def put_json(batch: str, group: str, name: str, value: dict):
+def put_json(batch: str, group: str, name: str, value: dict): # Write a JSON file to the landing area
     path = OUT / batch / group / name
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    return path
+    return path # Return the path to the created JSON file
 
 
-def ean13(prefix12: str) -> str:
+def ean13(prefix12: str) -> str: # Generate an EAN-13/ISBN-13 barcode from a 12-digit prefix
     """Generate an example checksum-valid EAN-13/ISBN-13 style barcode."""
     assert len(prefix12) == 12 and prefix12.isdigit()
     weighted_sum = sum(int(digit) * (1 if i % 2 == 0 else 3) for i, digit in enumerate(prefix12))
-    return prefix12 + str((-weighted_sum) % 10)
+    return prefix12 + str((-weighted_sum) % 10) # Append the calculated check digit to the prefix
 
 
 B1 = 'batch_01_arrived_2026-10-05'
 B2 = 'batch_02_arrived_2026-10-07'
-RULES = json.loads((ROOT / 'config' / 'business_rules.json').read_text(encoding='utf-8'))
+
+RULES = json.loads((ROOT / 'config' / 'business_rules.json').read_text(encoding='utf-8')) 
 book = lambda n: ean13(f'978000000{n:03d}')
 other = lambda n: ean13(f'594000000{n:03d}')
 products = [
@@ -56,23 +57,23 @@ by_id = {p['product_id']: p for p in products}
 
 def pcode(pid): return by_id[pid]['product_code']
 
-def snapshot(day, overrides=None):
-    overrides = overrides or {}
-    records = []
+def snapshot(day, overrides=None): # Create a snapshot of the product catalog for a given day, applying any overrides
+    overrides = overrides or {} # Initialize overrides if not provided
+    records = [] # Initialize the list of snapshot records
     for p in products:
         x = dict(snapshot_date=day, **p)
         x.update(overrides.get(p['product_id'], {}))
         records.append(x)
     return records
 
-put_csv(B1, 'master', 'product_catalogue_20261005.csv', snapshot('2026-10-05'))
-put_csv(B2, 'master', 'product_catalogue_20261007.csv', snapshot('2026-10-07', {'P104': {'list_price': 85}}))
-put_csv(B1, 'master', 'stores.csv', [
+put_csv(B1, 'master', 'product_catalogue_20261005.csv', snapshot('2026-10-05'))# Create initial product catalogue snapshot for 2026-10-05
+put_csv(B2, 'master', 'product_catalogue_20261007.csv', snapshot('2026-10-07', {'P104': {'list_price': 85}})) # Create product catalogue snapshot for 2026-10-07 with updated list price for P104
+put_csv(B1, 'master', 'stores.csv', [ # Create initial stores data
     dict(store_id='ST001', store_name='Central Cluj', city='Cluj-Napoca', region_id='NW', manager_id='M001', open_date='2023-04-01', status='OPEN', till_count=2),
     dict(store_id='ST002', store_name='Sibiu Books', city='Sibiu', region_id='CTR', manager_id='M002', open_date='2022-06-15', status='OPEN', till_count=2),
     dict(store_id='ST003', store_name='Timisoara Plaza', city='Timisoara', region_id='W', manager_id='M003', open_date='2021-08-10', status='OPEN', till_count=1),
 ])
-put_csv(B1, 'master', 'store_closures.csv', [
+put_csv(B1, 'master', 'store_closures.csv', [ # Record store closures
     dict(store_id='ST003', closure_start='2026-10-05', closure_end='2026-10-08', reason='RENOVATION')
 ])
 
@@ -89,7 +90,7 @@ def receipt(rid, till, ts, status, lines, payments, total, correction=''):
 
 # Standard sale; 3-for-2 promotion; cancelled incorrect receipt; corrected receipt.
 promo = RULES['three_for_two']
-for pid in ('P101', 'P102', 'P103'):
+for pid in ('P101', 'P102', 'P103'): # Ensure these products meet the promotion criteria
     p = by_id[pid]
     assert p['product_type'] == promo['product_type'] and p['format'] == promo['format'] and promo['min_unit_price'] <= p['list_price'] <= promo['max_unit_price']
 r1 = receipt('REC001', 'T01', '2026-10-05T10:00:00', 'COMPLETED',
@@ -113,12 +114,12 @@ r7 = receipt('REC007', 'T01', '2026-10-07T10:00:00', 'COMPLETED',
     [line('011','P104',1,85)],[payment('007','CARD',85)],85)
 put_json(B2, 'pos', 'ST001_T01_20261007.json', dict(store_id='ST001',till_id='T01',business_date='2026-10-07',receipts=[r7]))
 
-orders = [
+orders = [ # Define online orders
     dict(order_id='O5001', customer_id='', placed_at='2026-10-05T11:00:00', delivery_city='Cluj-Napoca', shipping_fee=10, order_total=85),
     dict(order_id='O5002', customer_id='', placed_at='2026-10-05T12:00:00', delivery_city='Bistrita', shipping_fee=10, order_total=55),
     dict(order_id='O5003', customer_id='', placed_at='2026-10-05T13:00:00', delivery_city='Suceava', shipping_fee=10, order_total=110),
 ]
-orderlines = [
+orderlines = [ # Define order lines for the online orders
     dict(order_line_id='OL001',order_id='O5001',product_code=pcode('P101'),quantity=1,unit_price=40,discount_amount=0),
     dict(order_line_id='OL002',order_id='O5001',product_code=pcode('P102'),quantity=1,unit_price=35,discount_amount=0),
     dict(order_line_id='OL003',order_id='O5002',product_code=pcode('P103'),quantity=1,unit_price=30,discount_amount=0),
@@ -127,7 +128,7 @@ orderlines = [
 ]
 put_csv(B1,'online','online_orders.csv',orders)
 put_csv(B1,'online','online_order_lines.csv',orderlines)
-statuses = [
+statuses = [ # Define status updates for the online orders
     dict(order_id='O5001',status='PLACED',status_event_timestamp='2026-10-05T11:00:00'),
     dict(order_id='O5001',status='PAID',status_event_timestamp='2026-10-05T11:07:00'),
     dict(order_id='O5001',status='CANCELLED',status_event_timestamp='2026-10-05T11:40:00'),
