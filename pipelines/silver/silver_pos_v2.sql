@@ -14,7 +14,9 @@
 -- Original Silver tables remain unchanged.
 -- ============================================================
 
-CREATE OR REFRESH STREAMING TABLE slv_pos_receipts_parsed_v2 (
+CREATE OR REFRESH STREAMING TABLE slv_pos_receipts_parsed_v2 ( 
+    
+# Defining constraints for the Silver POS receipts table
 
   CONSTRAINT file_header_present
     EXPECT (
@@ -93,8 +95,9 @@ WITH base AS (
         AS DECIMAL(18,2)
       )
     ) AS lines_amount,
-
-    -- Sum only successful POS payments
+-- ============================================================
+-- Sum only successful POS payments
+-- ============================================================
     aggregate(
       filter(
         r.payments,
@@ -118,10 +121,15 @@ WITH base AS (
   ) AS p
 
   LATERAL VIEW OUTER explode(p.receipts) t AS r
+) 
 
-)
 
-SELECT
+
+-- ============================================================
+-- Selecting and transforming POS receipt data for the Silver layer
+-- ============================================================
+
+SELECT 
 
   concat_ws(
     '|',
@@ -143,7 +151,10 @@ SELECT
   lines_amount,
   paid_amount,
 
-  -- Identify the file arrival date
+-- ============================================================
+-- Identify the file arrival date
+-- ============================================================
+  
   TRY_CAST(
     NULLIF(
       regexp_extract(
@@ -154,6 +165,7 @@ SELECT
       ''
     ) AS DATE
   ) AS arrival_date,
+
 
   -- Identify late-arriving data
   TRY_CAST(
@@ -167,7 +179,9 @@ SELECT
     ) AS DATE
   ) > business_date AS is_late_arrival,
 
-  -- Identify invalid receipts
+-- ============================================================
+-- Identify invalid receipts
+-- ============================================================
   filter(
     array(
 
@@ -213,7 +227,7 @@ SELECT
   source_file,
   _ingested_at
 
-FROM base;
+FROM base; 
 
 -- ============================================================
 -- 2. Quarantine invalid POS receipts - V2
@@ -250,8 +264,6 @@ FROM STREAM(slv_pos_receipts_parsed_v2)
 WHERE size(blocking_failures) > 0;
 
 
-
-
 -- ============================================================
 -- 3. Valid receipt events - V2
 -- Only valid receipt versions can update the latest state.
@@ -267,9 +279,6 @@ WHERE size(blocking_failures) = 0
   AND receipt_id IS NOT NULL
   AND arrival_date IS NOT NULL
   AND _ingested_at IS NOT NULL;
-
-
-
 
 
 -- ============================================================
@@ -292,9 +301,6 @@ SEQUENCE BY STRUCT(
 )
 
 STORED AS SCD TYPE 1;
-
-
-
 
 
 -- ============================================================
